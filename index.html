@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BLOOM - Curso de Assistente Virtual</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ============================================================
+           TEMA BLOOM - TODOS OS ESTILOS
+           ============================================================ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #FAF5F0;
+            --bg-card: #FFFFFF;
+            --primary: #B87D51;
+            --primary-dark: #8C5A38;
+            --secondary: #D9A9A0;
+            --gold: #B8935A;
+            --text-primary: #3A2E28;
+            --text-secondary: #8A7A70;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            --radius: 16px;
+            --transition: 0.3s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: white;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            color: var(--gold);
+            font-size: 28px;
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .logo-text span {
+            color: var(--primary);
+        }
+
+        /* ===== NAVEGAÇÃO ===== */
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav a {
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 500;
+            transition: color var(--transition);
+            cursor: pointer;
+            position: relative;
+            padding: 4px 0;
+        }
+
+        .nav a:hover {
+            color: var(--primary);
+        }
+
+        .nav a.active {
+            color: var(--primary);
+        }
+
+        .nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .btn-login-nav {
+            background: var(--primary);
+            color: white !important;
+            padding: 8px 24px !important;
+            border-radius: 50px;
+            font-weight: 600 !important;
+            transition: background var(--transition) !important;
+        }
+
+        .btn-login-nav:hover {
+            background: var(--primary-dark) !important;
+            color: white !important;
+        }
+
+        .btn-logout-nav {
+            background: transparent;
+            color: var(--text-secondary) !important;
+            padding: 8px 16px !important;
+            border-radius: 50px;
+            font-weight: 500 !important;
+            border: 1px solid #e0d6ce;
+            transition: all var(--transition) !important;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-logout-nav:hover {
+            border-color: var(--primary);
+            color: var(--primary) !important;
+        }
+
+        /* ===== MENU HAMBÚRGUER ===== */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 28px;
+            height: 2px;
+            background: var(--text-primary);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px;
+            flex: 1;
+            width: 100%;
+        }
+
+        /* ===== PÁGINAS ===== */
+        .page {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== TÍTULOS ===== */
+        .page-title {
+            font-size: 32px;
+            margin-bottom: 4px;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            font-size: 16px;
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: transform var(--transition), box-shadow var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        /* ===== GRID CURSOS ===== */
+        .grid-cursos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 8px;
+        }
+
+        .curso-card h3 {
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .curso-card .meta {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .progresso-container {
+            margin-top: 12px;
+        }
+
+        .progresso-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .barra-progresso {
+            width: 100%;
+            height: 6px;
+            background: #f0e8e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .barra-progresso .fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 10px;
+            transition: width 0.8s ease;
+        }
+
+        /* ===== FERRAMENTAS ===== */
+        .ferramentas-grupo {
+            margin-bottom: 32px;
+        }
+
+        .ferramentas-grupo h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .ferramenta-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            transition: all var(--transition);
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .ferramenta-item:hover {
+            border-color: var(--secondary);
+            transform: translateX(4px);
+        }
+
+        .ferramenta-item .info h4 {
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .ferramenta-item .info p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .ferramenta-item .seta {
+            color: var(--text-secondary);
+            font-size: 20px;
+            transition: transform var(--transition);
+        }
+
+        .ferramenta-item:hover .seta {
+            transform: translateX(4px);
+            color: var(--primary);
+        }
+
+        /* ===== PLANOS ===== */
+        .grid-planos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 8px;
+        }
+
+        .plano-card {
+            text-align: center;
+            padding: 32px 24px;
+            position: relative;
+        }
+
+        .plano-card.destaque {
+            border: 2px solid var(--gold);
+            transform: scale(1.02);
+        }
+
+        .badge-destaque {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gold);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 16px;
+            border-radius: 50px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .plano-nome {
+            font-size: 22px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .plano-preco {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 12px 0;
+        }
+
+        .plano-preco small {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+
+        .plano-beneficios {
+            list-style: none;
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        .plano-beneficios li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .plano-beneficios li::before {
+            content: '✅';
+        }
+
+        /* ===== BOTÕES ===== */
+        .btn {
+            display: inline-block;
+            padding: 12px 32px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 15px;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition);
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(184, 125, 81, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        .btn-sm {
+            padding: 8px 20px;
+            font-size: 13px;
+        }
+
+        /* ===== LOGIN ===== */
+        .login-wrapper {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: var(--radius);
+            padding: 40px 32px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .login-box .logo-icon {
+            font-size: 48px;
+        }
+
+        .login-box h1 {
+            font-size: 28px;
+            margin-top: 4px;
+        }
+
+        .login-box h2 {
+            font-size: 22px;
+            color: var(--primary);
+        }
+
+        .login-box .sub {
+            color: var(--text-secondary);
+            margin: 12px 0 24px;
+            font-size: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e0d6ce;
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            transition: border var(--transition);
+            background: #fcfaf8;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(184, 125, 81, 0.1);
+        }
+
+        .login-error {
+            color: #d9534f;
+            font-size: 14px;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .login-error.show {
+            display: block;
+        }
+
+        /* ===== PERFIL ===== */
+        .perfil-header {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .perfil-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .perfil-info h2 {
+            font-size: 24px;
+        }
+
+        .perfil-info p {
+            color: var(--text-secondary);
+        }
+
+        .perfil-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 12px;
+        }
+
+        .perfil-menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: white;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .perfil-menu-item:hover {
+            border-color: var(--secondary);
+            transform: translateX(4px);
+        }
+
+        .perfil-menu-item .left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .perfil-menu-item .left .icon {
+            font-size: 20px;
+        }
+
+        .perfil-menu-item .left span {
+            font-weight: 500;
+        }
+
+        .perfil-menu-item .right {
+            color: var(--text-secondary);
+        }
+
+        /* ===== CERTIFICADO ===== */
+        .certificado-status {
+            text-align: center;
+            padding: 48px 24px;
+        }
+
+        .certificado-status .icon-grande {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .certificado-status h3 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .certificado-status p {
+            color: var(--text-secondary);
+            max-width: 400px;
+            margin: 0 auto 24px;
+        }
+
+        /* ===== NOTIFICAÇÕES ===== */
+        .toggle-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: white;
+            border-radius: 12px;
+        }
+
+        .toggle {
+            width: 50px;
+            height: 28px;
+            background: #ddd;
+            border-radius: 50px;
+            cursor: pointer;
+            position: relative;
+            transition: background var(--transition);
+            flex-shrink: 0;
+        }
+
+        .toggle.active {
+            background: var(--primary);
+        }
+
+        .toggle .thumb {
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transition: transform var(--transition);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .toggle.active .thumb {
+            transform: translateX(22px);
+        }
+
+        /* ===== FAQ ===== */
+        .faq-item {
+            border-bottom: 1px solid #f0e8e0;
+            padding: 16px 0;
+        }
+
+        .faq-pergunta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 16px;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            color: var(--text-primary);
+            padding: 4px 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .faq-pergunta:hover {
+            color: var(--primary);
+        }
+
+        .faq-resposta {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .faq-item.aberto .faq-resposta {
+            max-height: 300px;
+            padding-top: 12px;
+        }
+
+        .faq-toggle {
+            font-size: 24px;
+            color: var(--text-secondary);
+            transition: transform 0.3s;
+            flex-shrink: 0;
+            margin-left: 16px;
+        }
+
+        .faq-item.aberto .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        /* ===== WHATSAPP ===== */
+        .whatsapp-box {
+            background: white;
+            border-radius: var(--radius);
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow);
+        }
+
+        .whatsapp-box h3 {
+            font-size: 20px;
+        }
+
+        .whatsapp-box p {
+            color: var(--text-secondary);
+            margin: 4px 0 16px;
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .btn-whatsapp:hover {
+            background: #1da851;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: white;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 32px 24px;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer-content .copy {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-social a {
+            color: var(--text-secondary);
+            transition: color var(--transition);
+            font-size: 14px;
+        }
+
+        .footer-social a:hover {
+            color: var(--primary);
+        }
+
+        /* ===== RESPONSIVO ===== */
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                padding: 24px;
+                gap: 16px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+            .nav.open {
+                display: flex;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .grid-cursos {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-planos {
+                grid-template-columns: 1fr;
+            }
+
+            .plano-card.destaque {
+                transform: scale(1);
+            }
+
+            .perfil-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-content {
+                flex-wrap: wrap;
+            }
+
+            .page-title {
+                font-size: 26px;
+            }
+
+            .login-box {
+                padding: 32px 20px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 16px;
+            }
+
+            .logo-text {
+                font-size: 20px;
+            }
+
+            .page-title {
+                font-size: 22px;
+            }
+
+            .plano-preco {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================
+    HEADER
+    ============================================================ -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo" onclick="navegar('home')">
+                <span class="logo-icon">✦</span>
+                <span class="logo-text">BLOOM <span>|</span> AV</span>
+            </div>
+
+            <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav class="nav" id="navMenu">
+                <a class="active" onclick="navegar('home')">Início</a>
+                <a onclick="navegar('ferramentas')">Ferramentas</a>
+                <a onclick="navegar('planos')">Planos</a>
+                <a onclick="navegar('suporte')">Suporte</a>
+                <a onclick="navegar('perfil')">Perfil</a>
+                <a id="btnLoginNav" class="btn-login-nav" onclick="navegar('login')">Entrar</a>
+                <button id="btnLogoutNav" class="btn-logout-nav" onclick="logout()" style="display:none;">Sair</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ============================================================
+    CONTEÚDO PRINCIPAL
+    ============================================================ -->
+    <main class="container">
+
+        <!-- ==========================================================
+        PÁGINA: HOME
+        ========================================================== -->
+        <section id="page-home" class="page active">
+            <h1 class="page-title">Meus Cursos</h1>
+            <p class="page-subtitle">Continue de onde parou</p>
+
+            <div class="grid-cursos" id="cursosGrid">
+                <!-- Renderizado via JavaScript -->
+            </div>
+        </section>
+
+        <!-- ==========================================================
+        PÁGINA: FERRAMENTAS
+        ========================================================== -->
+        <section id="page-ferramentas" class="page">
+            <h1 class="page-title">Ferramentas</h1>
+            <p class="page-subtitle">Sites e apps recomendados para o seu dia a dia</p>
+
+            <div id="ferramentasContainer">
+                <!-- Renderizado via JavaScript -->
+            </div>
+        </section>
+
+        <!-- ==========================================================
+        PÁGINA: PLANOS
+        ========================================================== -->
+        <section id="page-planos" class="page">
+            <h1 class="page-title">Planos</h1>
+            <p class="page-subtitle">Escolha o plano ideal para o seu momento</p>
+
+            <div class="grid-planos" id="planosGrid">
+                <!-- Renderizado via JavaScript -->
+            </div>
+        </section>
+
+        <!-- ==========================================================
+        PÁGINA: SUPORTE
+        ========================================================== -->
+        <section id="page-suporte" class="page">
+            <h1 class="page-title">Suporte</h1>
+            <p class="page-subtitle">Tire suas dúvidas ou fale com a gente</p>
+
+            <div class="whatsapp-box">
+                <h3>💬 Falar com um humano</h3>
+                <p>Resposta rápida pelo WhatsApp</p>
+                <a href="https://wa.me/5511999999999?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20o%20curso%20BLOOM" target="_blank" class="btn btn-whatsapp">
+                    Falar no WhatsApp
+                </a>
+            </div>
+
+            <h3 style="margin-bottom:16px;">Perguntas Frequentes</h3>
+            <div id="faqContainer">
+                <!-- Renderizado via JavaScript -->
+            </div>
+        </section>
+
+        <!-- ==========================================================
+        PÁGINA: PERFIL
+        ========================================================== -->
+        <section id="page-perfil" class="page">
+            <div id="perfilContent">
+                <!-- Renderizado via JavaScript -->
+            </div>
+        </section>
+
+        <!-- ==========================================================
+        PÁGINA: LOGIN
+        ========================================================== -->
+        <section id="page-login" class="page">
+            <div class="login-wrapper">
+                <div class="login-box">
+                    <div class="logo-icon">✦</div>
+                    <h1>Curso de</h1>
+                    <h2>Assistente Virtual</h2>
+                    <p class="sub">Entre para continuar aprendendo</p>
+
+                    <form id="loginForm" onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label for="loginEmail">E-mail</label>
+                            <input type="email" id="loginEmail" placeholder="seu@email.com" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="loginSenha">Senha</label>
+                            <input type="password" id="loginSenha" placeholder="••••••••" required />
+                        </div>
+                        <div class="login-error" id="loginError">E-mail ou senha inválidos.</div>
+                        <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+                    </form>
+
+                    <p style="margin-top:16px;font-size:13px;color:var(--text-secondary);">
+                        (Qualquer e-mail/senha funciona - versão de teste)
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================================
+    FOOTER
+    ============================================================ -->
+    <footer class="footer">
+        <div class="footer-content">
+            <span class="copy">✦ BLOOM · Curso de Assistente Virtual</span>
+            <div class="footer-social">
+                <a href="#" target="_blank">Instagram</a>
+                <a href="#" target="_blank">YouTube</a>
+                <a href="#" target="_blank">WhatsApp</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================================
+    JAVASCRIPT - TODA A LÓGICA
+    ============================================================ -->
+    <script>
+        // ============================================================
+        // DADOS MOCKADOS
+        // ============================================================
+
+        const CURSOS = [{
+            id: 1,
+            titulo: 'Introdução ao Trabalho',
+            aulas: 6,
+            progresso: 80
+        }, {
+            id: 2,
+            titulo: 'Agenda e E-mails',
+            aulas: 5,
+            progresso: 30
+        }, {
+            id: 3,
+            titulo: 'Atendimento ao Cliente',
+            aulas: 4,
+            progresso: 0
+        }, {
+            id: 4,
+            titulo: 'Ferramentas Essenciais',
+            aulas: 7,
+            progresso: 0
+        }];
+
+        const FERRAMENTAS = {
+            organizacao: [
+                { nome: 'Google Agenda', descricao: 'Organize compromissos e lembretes', link: '#' },
+                { nome: 'Trello', descricao: 'Quadros de tarefas por projeto/cliente', link: '#' },
+                { nome: 'Notion', descricao: 'Anotações e bases de dados simples', link: '#' },
+            ],
+            comunicacao: [
+                { nome: 'WhatsApp Business', descricao: 'Atendimento profissional ao cliente', link: '#' },
+                { nome: 'Google Meet', descricao: 'Reuniões e chamadas de vídeo', link: '#' },
+            ],
+            design: [
+                { nome: 'Canva', descricao: 'Criação de posts e artes simples', link: '#' },
+                { nome: 'CapCut', descricao: 'Edição de vídeos para redes sociais', link: '#' },
+            ]
+        };
+
+        const PLANOS = [{
+            id: 1,
+            nome: 'Básico',
+            preco: 'R$ 47',
+            periodo: '/mês',
+            beneficios: ['Acesso a todos os módulos', 'Certificado ao concluir', 'Suporte por FAQ'],
+            destaque: false
+        }, {
+            id: 2,
+            nome: 'Completo',
+            preco: 'R$ 87',
+            periodo: '/mês',
+            beneficios: [
+                'Tudo do plano Básico',
+                'Aulas ao vivo mensais',
+                'Grupo exclusivo no WhatsApp',
+                'Correção de currículo'
+            ],
+            destaque: true
+        }, {
+            id: 3,
+            nome: 'Mentoria',
+            preco: 'R$ 197',
+            periodo: '/mês',
+            beneficios: [
+                'Tudo do plano Completo',
+                'Mentoria individual quinzenal',
+                'Indicação para vagas parceiras'
+            ],
+            destaque: false
+        }];
+
+        const FAQ = [{
+            pergunta: 'Por quanto tempo tenho acesso ao curso?',
+            resposta: 'Enquanto sua assinatura estiver ativa, você tem acesso completo a todos os módulos e materiais.'
+        }, {
+            pergunta: 'Recebo certificado ao final?',
+            resposta: 'Sim, todos os planos incluem certificado de conclusão após você finalizar os módulos do curso.'
+        }, {
+            pergunta: 'Posso assistir pelo celular?',
+            resposta: 'Sim, o app funciona tanto no celular quanto pode ser acessado depois pelo computador.'
+        }, {
+            pergunta: 'Como funciona o cancelamento?',
+            resposta: 'Você pode cancelar quando quiser direto pela aba de planos, sem multa ou burocracia.'
+        }];
+
+        // ============================================================
+        // ESTADO DA APLICAÇÃO
+        // ============================================================
+
+        let usuarioLogado = null;
+        let nomeUsuario = 'Aluno';
+        let notificacoesAtivas = true;
+        let progressoTotal = 40; // mock
+
+        // ============================================================
+        // RENDERIZAÇÃO
+        // ============================================================
+
+        function renderizarCursos() {
+            const grid = document.getElementById('cursosGrid');
+            grid.innerHTML = CURSOS.map(curso => `
+                        <div class="card curso-card">
+                            <h3>${curso.titulo}</h3>
+                            <p class="meta">${curso.aulas} aulas</p>
+                            <div class="progresso-container">
+                                <div class="progresso-label">
+                                    <span>${curso.progresso}% concluído</span>
+                                </div>
+                                <div class="barra-progresso">
+                                    <div class="fill" style="width:${curso.progresso}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+        }
+
+        function renderizarFerramentas() {
+            const container = document.getElementById('ferramentasContainer');
+            const grupos = {
+                'Organização': FERRAMENTAS.organizacao,
+                'Comunicação': FERRAMENTAS.comunicacao,
+                'Design e Conteúdo': FERRAMENTAS.design
+            };
+
+            container.innerHTML = Object.entries(grupos).map(([titulo, itens]) => `
+                        <div class="ferramentas-grupo">
+                            <h3>${titulo}</h3>
+                            ${itens.map(item => `
+                                <a href="${item.link}" target="_blank" class="ferramenta-item">
+                                    <div class="info">
+                                        <h4>${item.nome}</h4>
+                                        <p>${item.descricao}</p>
+                                    </div>
+                                    <span class="seta">›</span>
+                                </a>
+                            `).join('')}
+                        </div>
+                    `).join('');
+        }
+
+        function renderizarPlanos() {
+            const grid = document.getElementById('planosGrid');
+            grid.innerHTML = PLANOS.map(plano => `
+                        <div class="card plano-card ${plano.destaque ? 'destaque' : ''}">
+                            ${plano.destaque ? '<span class="badge-destaque">★ Mais popular</span>' : ''}
+                            <h3 class="plano-nome">${plano.nome}</h3>
+                            <div class="plano-preco">
+                                ${plano.preco}<small>${plano.periodo}</small>
+                            </div>
+                            <ul class="plano-beneficios">
+                                ${plano.beneficios.map(b => `<li>${b}</li>`).join('')}
+                            </ul>
+                            <button class="btn btn-primary btn-block" onclick="alert('Funcionalidade em desenvolvimento')">
+                                Assinar ${plano.nome}
+                            </button>
+                        </div>
+                    `).join('');
+        }
+
+        function renderizarFAQ() {
+            const container = document.getElementById('faqContainer');
+            container.innerHTML = FAQ.map((item, index) => `
+                        <div class="faq-item" id="faq-${index}">
+                            <button class="faq-pergunta" onclick="toggleFAQ(${index})">
+                                ${item.pergunta}
+                                <span class="faq-toggle">+</span>
+                            </button>
+                            <div class="faq-resposta">${item.resposta}</div>
+                        </div>
+                    `).join('');
+        }
+
+        function renderizarPerfil() {
+            const container = document.getElementById('perfilContent');
+            const inicial = nomeUsuario.charAt(0).toUpperCase();
+
+            container.innerHTML = `
+                        <div class="perfil-header">
+                            <div class="perfil-avatar">${inicial}</div>
+                            <div class="perfil-info">
+                                <h2>${nomeUsuario}</h2>
+                                <p>${usuarioLogado || 'aluno@email.com'}</p>
+                            </div>
+                        </div>
+
+                        <div class="perfil-menu">
+                            <div class="perfil-menu-item" onclick="navegar('editar-perfil')">
+                                <div class="left">
+                                    <span class="icon">✏️</span>
+                                    <span>Editar dados pessoais</span>
+                                </div>
+                                <span class="right">›</span>
+                            </div>
+                            <div class="perfil-menu-item" onclick="navegar('certificado')">
+                                <div class="left">
+                                    <span class="icon">🎓</span>
+                                    <span>Meu certificado</span>
+                                </div>
+                                <span class="right">›</span>
+                            </div>
+                            <div class="perfil-menu-item" onclick="navegar('notificacoes')">
+                                <div class="left">
+                                    <span class="icon">🔔</span>
+                                    <span>Notificações</span>
+                                </div>
+                                <span class="right">›</span>
+                            </div>
+                            <div class="perfil-menu-item" onclick="logout()" style="border-color:#f0e0d8;">
+                                <div class="left">
+                                    <span class="icon">🚪</span>
+                                    <span style="color:var(--primary);">Sair da conta</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+        }
+
+        function renderizarEditarPerfil() {
+            const container = document.getElementById('perfilContent');
+            container.innerHTML = `
+                        <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+                            <button onclick="navegar('perfil')" style="background:none;border:none;font-size:24px;cursor:pointer;color:var(--text-secondary);">‹</button>
+                            <h1 class="page-title" style="margin:0;">Editar dados pessoais</h1>
+                        </div>
+
+                        <div class="card" style="max-width:500px;">
+                            <div class="form-group">
+                                <label>Nome</label>
+                                <input type="text" id="editNome" value="${nomeUsuario}" />
+                            </div>
+                            <div class="form-group">
+                                <label>E-mail</label>
+                                <input type="email" value="${usuarioLogado || 'aluno@email.com'}" disabled style="background:#f5f0eb;color:var(--text-secondary);" />
+                                <p style="font-size:12px;color:var(--text-secondary);margin-top:4px;">O e-mail não pode ser alterado por aqui.</p>
+                            </div>
+                            <button class="btn btn-primary btn-block" onclick="salvarEdicaoPerfil()">Salvar alterações</button>
+                        </div>
+                    `;
+        }
+
+        function renderizarCertificado() {
+            const container = document.getElementById('perfilContent');
+            const liberado = progressoTotal >= 100;
+
+            container.innerHTML = `
+                        <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+                            <button onclick="navegar('perfil')" style="background:none;border:none;font-size:24px;cursor:pointer;color:var(--text-secondary);">‹</button>
+                            <h1 class="page-title" style="margin:0;">Meu certificado</h1>
+                        </div>
+
+                        <div class="card certificado-status">
+                            <div class="icon-grande">${liberado ? '🎉' : '📜'}</div>
+                            <h3>${liberado ? 'Parabéns! Você concluiu o curso!' : 'Ainda não disponível'}</h3>
+                            <p>${liberado ? 'Seu certificado já está liberado para download.' : `Você concluiu ${progressoTotal}% do curso. Termine todos os módulos para liberar seu certificado.`}</p>
+                            ${!liberado ? `
+                                <button class="btn btn-primary" onclick="simularProgresso()">Continuar curso</button>
+                            ` : `
+                                <button class="btn btn-primary" onclick="alert('Certificado liberado! 🎓')">Baixar certificado</button>
+                            `}
+                            <div style="margin-top:16px;">
+                                <div class="barra-progresso" style="max-width:300px;margin:0 auto;">
+                                    <div class="fill" style="width:${progressoTotal}%"></div>
+                                </div>
+                                <p style="font-size:14px;color:var(--text-secondary);margin-top:4px;">${progressoTotal}% concluído</p>
+                            </div>
+                        </div>
+                    `;
+        }
+
+        function renderizarNotificacoes() {
+            const container = document.getElementById('perfilContent');
+            container.innerHTML = `
+                        <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+                            <button onclick="navegar('perfil')" style="background:none;border:none;font-size:24px;cursor:pointer;color:var(--text-secondary);">‹</button>
+                            <h1 class="page-title" style="margin:0;">Notificações</h1>
+                        </div>
+
+                        <div class="card" style="max-width:500px;">
+                            <div class="toggle-wrapper">
+                                <div>
+                                    <strong>Novidades do curso</strong>
+                                    <p style="font-size:14px;color:var(--text-secondary);margin:0;">Avisos de novas aulas e materiais</p>
+                                </div>
+                                <div class="toggle ${notificacoesAtivas ? 'active' : ''}" onclick="toggleNotificacoes()">
+                                    <div class="thumb"></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+        }
+
+        // ============================================================
+        // NAVEGAÇÃO
+        // ============================================================
+
+        function navegar(pagina) {
+            // Fecha menu mobile
+            document.getElementById('navMenu').classList.remove('open');
+
+            // Esconde todas as páginas
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+
+            // Mostra a página solicitada
+            const pageMap = {
+                'home': 'page-home',
+                'ferramentas': 'page-ferramentas',
+                'planos': 'page-planos',
+                'suporte': 'page-suporte',
+                'perfil': 'page-perfil',
+                'login': 'page-login',
+                'editar-perfil': 'page-perfil',
+                'certificado': 'page-perfil',
+                'notificacoes': 'page-perfil'
+            };
+
+            const pageId = pageMap[pagina] || 'page-home';
+            document.getElementById(pageId).classList.add('active');
+
+            // Atualiza links do menu
+            document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
+            const links = document.querySelectorAll('.nav a');
+            const indexMap = { 'home': 0, 'ferramentas': 1, 'planos': 2, 'suporte': 3, 'perfil': 4 };
+            if (indexMap[pagina] !== undefined) {
+                links[indexMap[pagina]].classList.add('active');
+            }
+
+            // Renderiza conteúdo específico
+            if (pagina === 'perfil') renderizarPerfil();
+            if (pagina === 'editar-perfil') renderizarEditarPerfil();
+            if (pagina === 'certificado') renderizarCertificado();
+            if (pagina === 'notificacoes') renderizarNotificacoes();
+
+            // Scroll pro topo
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ============================================================
+        // MENU MOBILE
+        // ============================================================
+
+        function toggleMenu() {
+            document.getElementById('navMenu').classList.toggle('open');
+        }
+
+        // ============================================================
+        // LOGIN / LOGOUT
+        // ============================================================
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const senha = document.getElementById('loginSenha').value.trim();
+            const errorEl = document.getElementById('loginError');
+
+            if (!email || !senha) {
+                errorEl.textContent = 'Preencha todos os campos.';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            // Mock: qualquer login funciona
+            usuarioLogado = email;
+            nomeUsuario = email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1);
+
+            // Atualiza UI
+            atualizarUIposLogin();
+
+            // Redireciona
+            navegar('home');
+        }
+
+        function logout() {
+            usuarioLogado = null;
+            nomeUsuario = 'Aluno';
+            atualizarUIposLogout();
+            navegar('home');
+        }
+
+        function atualizarUIposLogin() {
+            document.getElementById('btnLoginNav').style.display = 'none';
+            document.getElementById('btnLogoutNav').style.display = 'inline-block';
+            renderizarCursos();
+        }
+
+        function atualizarUIposLogout() {
+            document.getElementById('btnLoginNav').style.display = 'inline-block';
+            document.getElementById('btnLogoutNav').style.display = 'none';
+        }
+
+        // ============================================================
+        // PERFIL - AÇÕES
+        // ============================================================
+
+        function salvarEdicaoPerfil() {
+            const novoNome = document.getElementById('editNome').value.trim();
+            if (novoNome) {
+                nomeUsuario = novoNome;
+                alert('Nome atualizado com sucesso!');
+                navegar('perfil');
+            } else {
+                alert('O nome não pode ficar vazio.');
+            }
+        }
+
+        function simularProgresso() {
+            progressoTotal = Math.min(100, progressoTotal + 20);
+            renderizarCertificado();
+            renderizarCursos();
+        }
+
+        function toggleNotificacoes() {
+            notificacoesAtivas = !notificacoesAtivas;
+            renderizarNotificacoes();
+        }
+
+        // ============================================================
+        // FAQ
+        // ============================================================
+
+        function toggleFAQ(index) {
+            const item = document.getElementById(`faq-${index}`);
+            item.classList.toggle('aberto');
+        }
+
+        // ============================================================
+        // INICIALIZAÇÃO
+        // ============================================================
+
+        function init() {
+            renderizarCursos();
+            renderizarFerramentas();
+            renderizarPlanos();
+            renderizarFAQ();
+            renderizarPerfil();
+
+            // Verifica se já está logado (mock - mantém estado)
+            // Por enquanto, sempre começa deslogado
+            atualizarUIposLogout();
+
+            // Se estiver na página de login e já logado, redireciona
+            if (usuarioLogado) {
+                navegar('home');
+            }
+        }
+
+        // Inicia quando a página carregar
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+
+</body>
+</html>
